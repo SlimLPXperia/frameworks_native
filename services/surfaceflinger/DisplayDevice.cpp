@@ -27,6 +27,10 @@
 #include <ui/DisplayInfo.h>
 #include <ui/PixelFormat.h>
 
+#ifdef STE_HARDWARE
+#include <ui/FramebufferNativeWindow.h>
+#endif
+
 #include <gui/Surface.h>
 
 #include <hardware/gralloc.h>
@@ -77,7 +81,11 @@ DisplayDevice::DisplayDevice(
       mPowerMode(HWC_POWER_MODE_OFF),
       mActiveConfig(0)
 {
+#ifdef STE_HARDWARE
+    mNativeWindow = new FramebufferNativeWindow();
+#else
     mNativeWindow = new Surface(producer, false);
+#endif
     ANativeWindow* const window = mNativeWindow.get();
 
     /*
